@@ -1,0 +1,71 @@
+services:
+  db:
+    image: postgres:16
+    container_name: chs_db
+    environment:
+      POSTGRES_DB: stocks_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - chs_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d stocks_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: chs_backend
+    env_file:
+      - .env.docker
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: stocks_dev
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      PUBLIC_BASE_URL: http://localhost:8000
+      EMAIL_MODE: console
+      WATCHFILES_FORCE_POLLING: "true"
+
+      # Ensure this is definitely in the container:
+      DEV_BILLING_BYPASS: "true"
+
+      # Ensure Google login works in backend:
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: chs_frontend
+
+    # THIS is what you were missing:
+    env_file:
+      - .env.docker
+
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  chs_pgdata:

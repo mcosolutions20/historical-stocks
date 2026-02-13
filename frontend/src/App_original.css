@@ -1,0 +1,54 @@
+/* App.css */
+
+#root {
+  width: 100%;
+}
+
+/* Keep the app content feeling like a page */
+main {
+  width: 100%;
+}
+
+/* Optional: “app shell” feel (subtle) */
+.app-shell {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* Make tables feel a bit more modern */
+.table {
+  margin-bottom: 0;
+}
+
+.table-responsive {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Tighten headings a bit */
+h1 {
+  letter-spacing: 0.5px;
+}
+
+/* Inputs: max width handled in component, but this helps */
+.form-control {
+  border-radius: 10px;
+}
+
+/* DatePicker: make it match Bootstrap inputs */
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  padding: 0.375rem 0.75rem;
+}

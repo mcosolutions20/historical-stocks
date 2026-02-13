@@ -1,0 +1,51 @@
+/* App.css */
+
+#root {
+  width: 100%;
+}
+
+.app-page {
+  min-height: 100vh;
+}
+
+main {
+  width: 100%;
+}
+
+/* App shell card */
+.app-shell {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+/* Better tables */
+.table-responsive {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.table thead th {
+  font-weight: 600;
+  color: rgba(33, 37, 41, 0.85);
+}
+
+.table tbody tr:hover {
+  background: rgba(13, 110, 253, 0.04); /* subtle Bootstrap primary tint */
+}
+
+/* Buttons & inputs consistency */
+.btn,
+.form-control,
+.form-select {
+  border-radius: 10px;
+}
+
+/* Make sections breathe a bit */
+h1, h2, h3 {
+  letter-spacing: 0.2px;
+}

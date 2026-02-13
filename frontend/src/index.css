@@ -1,0 +1,34 @@
+/* index.css */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Basic reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f8f9fa; /* Bootstrap-ish light gray */
+  color: #212529;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Keep links clean */
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
