@@ -109,7 +109,7 @@ function SearchStock({ userInfo, planInfo, onAuthChanged }) {
                   className="btn btn-link btn-sm p-0 ms-2"
                   onClick={() => {
                     navigator.clipboard?.writeText("4242424242424242");
-                    alert("Copied test card number: 4242 4242 4242 4242");
+                    alert("Copied test card number: 4242 4242 4242 4242\n\nUse this card number with any future expiry date and any CVC in the Stripe checkout form.");
                   }}
                 >
                   Copy
