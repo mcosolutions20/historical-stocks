@@ -35,10 +35,11 @@ services:
       WATCHFILES_FORCE_POLLING: "true"
 
       # Ensure this is definitely in the container:
-      DEV_BILLING_BYPASS: "true"
+      # DEV_BILLING_BYPASS: "${DEV_BILLING_BYPASS}"
+
 
       # Ensure Google login works in backend:
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      # GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
