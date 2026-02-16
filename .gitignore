@@ -26,6 +26,7 @@ lerna-debug.log*
 .env.*
 !.env.example
 !.env.docker.example
+.env.docker
 
 # OS / Editor
 .DS_Store
