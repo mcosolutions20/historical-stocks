@@ -2,12 +2,11 @@ services:
   db:
     image: postgres:16
     container_name: chs_db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: stocks_dev
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5433:5432"
     volumes:
       - chs_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -21,6 +20,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: chs_backend
+    restart: unless-stopped
     env_file:
       - .env.docker
     environment:
@@ -40,7 +40,7 @@ services:
       # Ensure Google login works in backend:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -52,6 +52,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: chs_frontend
+    restart: unless-stopped
 
     # THIS is what you were missing:
     env_file:
@@ -60,7 +61,7 @@ services:
     environment:
       CHOKIDAR_USEPOLLING: "true"
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     depends_on:
       - backend
     volumes:

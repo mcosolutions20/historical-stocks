@@ -528,3 +528,5 @@ def secure_outlier(start: date, end: date, performance: str, quantity: int, user
         cache_set(key, data, ttl_seconds=OUTLIERS_CACHE_TTL_SECONDS)
 
     return {"usage": usage, "data": data}
+
+
