@@ -176,7 +176,9 @@ def billing_create_checkout(user=Depends(get_current_user)):
 
     dev_bypass = (os.getenv("DEV_BILLING_BYPASS", "false").lower().strip() == "true")
 
-    if (not stripe_is_configured()) and dev_bypass:
+    # Local/dev convenience: if bypass is enabled, short-circuit BEFORE Stripe
+    is_dev_env = os.getenv("ENV", "").lower() == "dev"
+    if dev_bypass and is_dev_env:
         upgrade_user_to_pro_24h(user["id"])
         return {"url": None, "dev_upgraded": True}
 
