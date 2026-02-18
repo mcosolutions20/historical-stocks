@@ -95,26 +95,15 @@ function SearchStock({ userInfo, planInfo, onAuthChanged }) {
             <strong>{s.usage.plan.toUpperCase()}</strong> plan —{" "}
             {s.usage.searches_used} / {s.usage.limit} searches used
           </div>
-          {s.needsUpgrade && (
+          {(s.usage?.plan === "free") && (
             <div className="d-flex flex-column align-items-end gap-1">
-              <button className="btn btn-sm btn-warning" onClick={handleUpgrade}>
+              <button className="btn btn-sm btn-warning" onClick={() =>{
+                navigator.clipboard?.writeText("4242424242424242");
+                alert("Copied test card number: 4242 4242 4242 4242\n\nUse this card number with any future expiry date and any CVC in the Stripe checkout form.");
+                handleUpgrade();}}>
                 Upgrade (demo checkout)
               </button>
 
-              <div className="text-end" style={{ fontSize: 12, opacity: 0.85 }}>
-                This site uses Stripe <strong>test mode</strong> (no real charges). Use card{" "}
-                <code>4242 4242 4242 4242</code>.
-                <button
-                  type="button"
-                  className="btn btn-link btn-sm p-0 ms-2"
-                  onClick={() => {
-                    navigator.clipboard?.writeText("4242424242424242");
-                    alert("Copied test card number: 4242 4242 4242 4242\n\nUse this card number with any future expiry date and any CVC in the Stripe checkout form.");
-                  }}
-                >
-                  Copy
-                </button>
-              </div>
             </div>
           )}
 

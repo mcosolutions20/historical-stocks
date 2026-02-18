@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import SearchStock from "./components/searchStockInfo";
 import AuthModal from "./components/AuthModal";
 import PortfolioManager from "./components/PortfolioManager";
-import { setToken, me, isAuthed, previewNewsletter, sendNewsletter } from "./api";
+import { setToken, me, isAuthed, previewNewsletter, sendNewsletter, createCheckoutSession } from "./api";
+
 
 export default function App() {
   const [authOpen, setAuthOpen] = useState(false);
@@ -78,6 +79,48 @@ export default function App() {
     setNewsletterPreview("");
   }
 
+  async function handleUpgrade() {
+    try {
+      const res = await createCheckoutSession();
+
+      // Stripe path
+      if (res?.url) {
+        window.location.href = res.url;
+        return;
+      }
+
+      // Dev bypass path
+      if (res?.dev_upgraded) {
+        setToast("Dev mode: upgraded to PRO (Stripe bypass).");
+        await refreshMe();
+        setTimeout(() => setToast(""), 2500);
+        return;
+      }
+
+      setToast("Upgrade is not available right now (no checkout URL returned).");
+      setTimeout(() => setToast(""), 2500);
+    } catch (err) {
+      const status = err?.response?.status;
+      const detail = err?.response?.data?.detail;
+
+      if (status === 501 && detail?.code === "billing_not_configured") {
+        setToast("Billing not configured in this environment.");
+        setTimeout(() => setToast(""), 2500);
+        return;
+      }
+
+      const msg =
+        detail?.message ||
+        detail?.detail ||
+        err?.response?.data?.detail ||
+        err?.message ||
+        "Upgrade failed.";
+
+      setToast(String(msg));
+      setTimeout(() => setToast(""), 2500);
+    }
+  }
+
   async function handlePreviewNewsletter() {
     try {
       setToast("Generating preview…");
@@ -125,6 +168,17 @@ export default function App() {
                 <span className="text-muted small">
                     {userInfo.username} • {planInfo.plan.toUpperCase()} • used {planInfo.searches_used} / {planInfo.limit}
                 </span>
+                {planInfo?.plan === "free" && (
+                  <div className="d-flex align-items-center gap-2">
+                    <button className="btn btn-sm btn-warning" onClick={() =>{
+                      navigator.clipboard?.writeText("4242424242424242");
+                      alert("Copied test card number: 4242 4242 4242 4242\n\nUse this card number with any future expiry date and any CVC in the Stripe checkout form.");
+                      handleUpgrade();}}>
+                      Upgrade (demo checkout)
+                    </button>
+                  </div>
+                )}
+
 
                 <button className="btn btn-sm btn-outline-secondary" onClick={refreshMe}>
                     Refresh
