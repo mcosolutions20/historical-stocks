@@ -30,8 +30,16 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
 
-      PUBLIC_BASE_URL: http://localhost:8000
-      EMAIL_MODE: console
+      EMAIL_MODE: smtp
+      SMTP_HOST: email-smtp.us-east-1.amazonaws.com
+      SMTP_PORT: "587"
+      SMTP_USER: 
+      SMTP_PASS: 
+      SMTP_FROM: "no-reply@michaeloconnor.xyz"
+      PUBLIC_BASE_URL: "https://historical-stocks.michaeloconnor.xyz"
+
+      #PUBLIC_BASE_URL: http://localhost:8000
+      #EMAIL_MODE: console
       WATCHFILES_FORCE_POLLING: "true"
 
       # Ensure this is definitely in the container:
@@ -61,6 +69,8 @@ services:
 
     environment:
       CHOKIDAR_USEPOLLING: "true"
+      VITE_API_BASE: "https://historical-stocks.michaeloconnor.xyz/api"
+
     ports:
       - "127.0.0.1:5173:5173"
     depends_on:

@@ -56,7 +56,7 @@ def _smtp_send(msg: EmailMessage) -> None:
 
 
 def send_verification_email(to_email: str, token: str) -> None:
-    verify_url = f"{PUBLIC_BASE_URL}/auth/verify/{token}"
+    verify_url = f"{PUBLIC_BASE_URL}/api/auth/verify/{token}"
 
     msg = EmailMessage()
     msg["Subject"] = "Verify your email"

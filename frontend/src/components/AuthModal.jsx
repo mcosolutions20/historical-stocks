@@ -26,6 +26,7 @@ export default function AuthModal({ isOpen, toggle, onAuthed }) {
     try {
       const res = await register({ email, username, password: regPassword });
       if (res?.message) setDemoVerifyUrl("Check your email to verify.");
+
     } catch (err) {
       setError(err?.response?.data?.detail || "Register failed");
     } finally {
