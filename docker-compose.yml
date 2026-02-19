@@ -33,8 +33,6 @@ services:
       EMAIL_MODE: smtp
       SMTP_HOST: email-smtp.us-east-1.amazonaws.com
       SMTP_PORT: "587"
-      SMTP_USER: 
-      SMTP_PASS: 
       SMTP_FROM: "no-reply@michaeloconnor.xyz"
       PUBLIC_BASE_URL: "https://historical-stocks.michaeloconnor.xyz"
 
