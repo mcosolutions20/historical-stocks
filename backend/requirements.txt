@@ -17,3 +17,4 @@ yfinance
 psycopg
 pandas
 pytickersymbols
+resend==0.8.0
