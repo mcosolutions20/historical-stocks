@@ -14,6 +14,7 @@ import os
 import smtplib
 import sys
 from email.message import EmailMessage
+import requests
 
 
 EMAIL_MODE = (os.getenv("EMAIL_MODE", "smtp") or "smtp").lower().strip()
@@ -24,8 +25,30 @@ SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_PASS = os.getenv("SMTP_PASS", "")
 SMTP_FROM = os.getenv("SMTP_FROM", SMTP_USER)
 
+# resend.com is an example of a transactional email API provider. You can use it instead of SMTP if you prefer.
+EMAIL_PROVIDER = (os.getenv("EMAIL_PROVIDER", "smtp") or "smtp").lower().strip()
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+RESEND_FROM = os.getenv("RESEND_FROM", SMTP_FROM).strip()
+
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "http://127.0.0.1:8000")
 
+def _resend_send(to_email: str, subject: str, text: str) -> None:
+    if not RESEND_API_KEY:
+        raise RuntimeError("RESEND_API_KEY not set")
+
+    r = requests.post(
+        "https://api.resend.com/emails",
+        headers={"Authorization": f"Bearer {RESEND_API_KEY}", "Content-Type": "application/json"},
+        json={
+            "from": RESEND_FROM,
+            "to": [to_email],
+            "subject": subject,
+            "text": text,
+        },
+        timeout=15,
+    )
+    if r.status_code >= 400:
+        raise RuntimeError(f"Resend send failed: {r.status_code} {r.text}")
 
 def _smtp_send(msg: EmailMessage) -> None:
     """Send an email.
@@ -58,21 +81,34 @@ def _smtp_send(msg: EmailMessage) -> None:
 def send_verification_email(to_email: str, token: str) -> None:
     verify_url = f"{PUBLIC_BASE_URL}/api/auth/verify/{token}"
 
-    msg = EmailMessage()
-    msg["Subject"] = "Verify your email"
-    msg["From"] = SMTP_FROM
-    msg["To"] = to_email
-    msg.set_content(
+    subject = "Verify your email"
+    body = (
         "Please verify your email by clicking this link:\n\n"
         f"{verify_url}\n\n"
         "If you did not request this, you can ignore this email."
     )
+
+    if EMAIL_PROVIDER == "resend":
+        _resend_send(to_email, subject, body)
+        return
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = SMTP_FROM
+    msg["To"] = to_email
+    msg.set_content(body)
     _smtp_send(msg)
 
 
 def send_newsletter_email(to_email: str, newsletter_text: str) -> None:
+    subject = "Your demo finance newsletter"
+
+    if EMAIL_PROVIDER == "resend":
+        _resend_send(to_email, subject, newsletter_text)
+        return
+
     msg = EmailMessage()
-    msg["Subject"] = "Your demo finance newsletter"
+    msg["Subject"] = subject
     msg["From"] = SMTP_FROM
     msg["To"] = to_email
     msg.set_content(newsletter_text)
